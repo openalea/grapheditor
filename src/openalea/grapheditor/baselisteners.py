@@ -19,10 +19,10 @@ __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
 
-import types
+#import types
 import weakref
-import openalea.grapheditor.observer
-import openalea.grapheditor.interfaces
+from openalea.grapheditor import observer
+#import openalea.grapheditor.interfaces
 
 
 
