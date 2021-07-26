@@ -212,7 +212,7 @@ class Vertex(Element):
     vertex = baselisteners.GraphElementListenerBase.get_observed
 
     def iter_connectors(self, filter=lambda x:True):
-        return (c for c in self.__connectors if filter(c))
+        return (c for c in self.__connectors if list(filter(c)))
 
     def get_scene_center(self):
         """retrieve the center of the widget on the scene"""
@@ -392,10 +392,8 @@ class Edge(Element):
         # hack to update start and end points:
         if change == QtGui.QGraphicsItem.ItemVisibleHasChanged:
             try:
-                srcGraphical = filter(lambda x: isinstance(x(), Connector),
-                                      self.srcBBox().listeners)[0]()
-                dstGraphical = filter(lambda x: isinstance(x(), Connector),
-                                      self.dstBBox().listeners)[0]()
+                srcGraphical = [x for x in self.srcBBox().listeners if isinstance(x(), Connector)][0]()
+                dstGraphical = [x for x in self.dstBBox().listeners if isinstance(x(), Connector)][0]()
                 srcGraphical.notify_position_change()
                 dstGraphical.notify_position_change()
             except:
@@ -435,7 +433,7 @@ class FloatingEdge(Edge):
             if(srcVertex == None or dstVertex == None):
                 return
             self.scene().add_edge(srcVertex, dstVertex)
-        except Exception, e:
+        except Exception as e:
             pass
             # print "consolidation failed :", type(e), e,\
             # ". Are you sure you plugged the right ports?"
@@ -553,7 +551,7 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
         # do not use the following even though it is faster.
         # qt might just delete stuff that is owned by Python.
         # QtGui.QGraphicsScene.clear(self)
-        items = self.items()
+        items = list(self.items())
         for i in items:
             self.removeItem(i) # let gc do the rest.
         baselisteners.GraphListenerBase.clear(self)
@@ -590,7 +588,7 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
         if filterType and not isinstance(filterType, tuple):
             filterType = filterType,
         return [ (item if subcall is None else subcall(item))
-                 for item in self.items() if
+                 for item in list(self.items()) if
                  (True if filterType is None else isinstance(item, filterType))]
 
     def get_selected_items(self, filterType=None, subcall=None):
@@ -598,7 +596,7 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
         if filterType and not isinstance(filterType, tuple):
             filterType = filterType,
         return [ (item if subcall is None else subcall(item))
-                 for item in self.items() if item.isSelected() and
+                 for item in list(self.items()) if item.isSelected() and
                  (True if filterType is None else isinstance(item, filterType))]
 
     def get_selection_center(self, selection=None):
@@ -699,7 +697,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         """ Return the format of the object if a handler is registered for it.
         If not, if there is a default handler, returns True, else returns False.
         """
-        for format in self.__mimeHandlers.keys():
+        for format in list(self.__mimeHandlers.keys()):
             if event.mimeData().hasFormat(format): return format
         return True if self.__defaultDropHandler else False
 
@@ -804,7 +802,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
 
 
 if __debug__:
-    import interfaces
+    from . import interfaces
     interfaces.IGraphListener.check(Scene)
 
 def QtGraphStrategyMaker(*args, **kwargs):
