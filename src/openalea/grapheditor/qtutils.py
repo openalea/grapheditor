@@ -79,7 +79,7 @@ class AleaSignal(object):
         self.callbacks[callback] = callback
     def disconnect(self, callback=None):
         if callback is not None:
-            del self.callbacks[callbacks]
+            del self.callbacks[callback]
         else:
             self.callbacks.clear()
     def emit(self, *args):
@@ -530,7 +530,7 @@ class Layout(object):
     def setPos(self, pos):
         raise NotImplementedError
 
-    def setMinimumSize(width=None, height=None):
+    def setMinimumSize(self, width=None, height=None):
         if width: self._minWidth = width
         if height: self._minHeight = height
 

@@ -17,6 +17,7 @@
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
+from _typeshed import Self
 from openalea.core.observer import Observed, AbstractListener
 from openalea.core.metadatadict import MetaDataDict, HasAdHoc
 import weakref
@@ -34,7 +35,7 @@ class Graph(Observed):
         for v in list(self.__vertices.values()):
             self.notify_listeners( ("vertex_added", ("vertex", v)) )
         for e in list(self.__edges.values()):
-            self.notify_listeners( ("edge_added", ("default", v)) )
+            self.notify_listeners( ("edge_added", ("default", e)) )
 
     #todo : add this to the graph_adapter interface?
     def new_vertex(self, position=None):
@@ -79,7 +80,7 @@ class Graph(Observed):
         return vertex
 
     #todo : add this to the graph_adapter interface?
-    def new_edge(src, dst):
+    def new_edge(self, src, dst):
         edge = Edge(src, dst)
         self.add_edge(src, dst, edge)
         

@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: OpenAlea.GraphEditor
+Version: 2.0.1
+Summary: GraphEditor package for OpenAlea.
+Home-page: https://github.com/openalea/openalea
+Author: Daniel Barbeau, Christophe Pradal
+Author-email: christophe.pradal@cirad.fr
+License: Cecill-C
+Description: An attempt at generalising the viewing and interacting of various sorts of graphs.
+Platform: UNKNOWN
