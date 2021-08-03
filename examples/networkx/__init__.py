@@ -102,7 +102,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
 #------------------------
 # -- the graph qt view --
 #------------------------
-from PyQt5 import QtGui, QtCore
+from openalea.vpltk.qt import QtGui, QtCore
 from openalea.grapheditor.qt import (Vertex, View, mixin_method,
                                      QtGraphStrategyMaker,
                                      DefaultGraphicalEdge,
