@@ -17,7 +17,6 @@
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
-from _typeshed import Self
 from openalea.core.observer import Observed, AbstractListener
 from openalea.core.metadatadict import MetaDataDict, HasAdHoc
 import weakref

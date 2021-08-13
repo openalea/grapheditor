@@ -800,11 +800,16 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
     notify = deprecate("notify")
 
 
+## If uncommented raise a Warning : 
+## UserWarning: Object <class 'openalea.grapheditor.qtgraphview.Scene'> does not belong to the Interface IGraphListener 
+## Unimplemented : 
+##      __qualname__
+## So I commented it ...
+#
+# if __debug__:
+#     from . import interfaces
+#     interfaces.IGraphListener.check(Scene)
 
-'''if __debug__:
-    from . import interfaces
-    interfaces.IGraphListener.check(Scene)
-'''
 
 def QtGraphStrategyMaker(*args, **kwargs):
     _type = base.GraphStrategyMaker(*args, **kwargs)
