@@ -19,7 +19,7 @@ package_dir={'': 'src'}
 setup_requires = ['openalea.deploy']
 install_requires = []
 # web sites where to find eggs
-dependency_links = ['http://openalea.gforge.inria.fr/pi']
+dependency_links = []
 
 # setup function call
 #
@@ -40,8 +40,8 @@ setup(
     package_dir= package_dir,
 
     # Namespace packages creation by deploy
-    namespace_packages=[namespace],
-    create_namespaces=True,
+    #namespace_packages=[namespace],
+    #create_namespaces=True,
 
     zip_safe=False,
 
