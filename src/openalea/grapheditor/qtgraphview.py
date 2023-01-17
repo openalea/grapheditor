@@ -689,8 +689,8 @@ class View(QtWidgets.QGraphicsView, baselisteners.GraphViewBase):
         self.__defaultDropHandler = handler
 
     def wheelEvent(self, event):
-        delta = -event.delta() / 2400.0 + 1.0
-        self.scale_view(delta)
+        delta = -event.pixelDelta() / 2400.0 + QtCore.QPoint(1, 1)
+        self.scale(delta.x(), delta.y())
 
     # ----drag and drop----
     def accept_drop(self, event):
