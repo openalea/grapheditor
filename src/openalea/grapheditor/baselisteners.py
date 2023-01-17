@@ -176,9 +176,10 @@ class GraphListenerBase(observer.AbstractListener):
         self.__graph           = graph
         #obtaining types from the strategy.
         cls = self.__strategyCls
-        self.__graphAdapter = adapter if adapter is not None else \
-                              (graph if cls.__adapterType__ is None \
-                               else cls.__adapterType__(graph))
+        self.__graphAdapter = (adapter if adapter is not None 
+                               else (graph if cls.__adapterType__ is None 
+                                     else cls.__adapterType__(graph))
+                              )
         self.__observableGraph = graph if observableGraph is None else observableGraph
         if self.__observableGraph:
             self.__observableGraph.register_listener(self)

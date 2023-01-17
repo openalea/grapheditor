@@ -36,7 +36,7 @@ from openalea.vpltk.qt import QtCore, QtGui
 #         return SplineEdgePath()
 
 
-class LinearEdgePath(object):
+class LinearEdgePath:
     """ Draw edges as line. """
     def __init__(self):
         self.p1 = QtCore.QPointF()

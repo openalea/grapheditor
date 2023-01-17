@@ -23,7 +23,7 @@ from openalea.grapheditor.baselisteners import GraphListenerBase
 from openalea.grapheditor.qtutils  import mixin_method, extend_qt_scene_event
 from openalea.grapheditor.qtgraphview import Vertex, Edge, FloatingEdge
 from openalea.grapheditor.edgefactory import LinearEdgePath
-from openalea.vpltk.qt import QtGui, QtCore
+from openalea.vpltk.qt import QtGui, QtCore, QtWidgets
 from openalea.grapheditor.SimpleGraph.custom_graph_model import Graph as GraphType
 from openalea.grapheditor.SimpleGraph.custom_graph_model import Vertex as VertexModel
 
@@ -34,12 +34,12 @@ from openalea.grapheditor.SimpleGraph.custom_graph_model import Vertex as Vertex
 # edges                                                      #
 ##############################################################
 
-class SimpleVertex(QtGui.QGraphicsEllipseItem, Vertex):
+class SimpleVertex(QtWidgets.QGraphicsEllipseItem, Vertex):
     __vertex_size__= QtCore.QSizeF(30.0, 30.0)
     __border_size__=5
 
     def __init__(self, vertex, graph, parent=None):
-        QtGui.QGraphicsEllipseItem.__init__(self, 0.0, 0.0,
+        QtWidgets.QGraphicsEllipseItem.__init__(self, 0.0, 0.0,
                                             self.__vertex_size__.width(),
                                             self.__vertex_size__.height(),
                                             parent)
@@ -66,8 +66,8 @@ class SimpleVertex(QtGui.QGraphicsEllipseItem, Vertex):
     ##################
     # QtWorld-Events #
     ##################        
-    mousePressEvent = mixin_method(Vertex, QtGui.QGraphicsEllipseItem, "mousePressEvent")
-    itemChange = mixin_method(Vertex, QtGui.QGraphicsEllipseItem, "itemChange")
+    mousePressEvent = mixin_method(Vertex, QtWidgets.QGraphicsEllipseItem, "mousePressEvent")
+    itemChange = mixin_method(Vertex, QtWidgets.QGraphicsEllipseItem, "itemChange")
         
     def contextMenuEvent(self, event): #called on right click on the vertex.
         menu = QtGui.QMenu(event.widget())
@@ -80,7 +80,7 @@ class SimpleVertex(QtGui.QGraphicsEllipseItem, Vertex):
         self.graph().remove_vertex(self.vertex())
 
     def paint(self, painter, painterOptions, widget):
-        QtGui.QGraphicsEllipseItem.paint(self, painter, painterOptions, widget)
+        QtWidgets.QGraphicsEllipseItem.paint(self, painter, painterOptions, widget)
         
     def store_view_data(self, key, value, notify=True):
         self.vertex().get_ad_hoc_dict().set_metadata(key, value, notify)
@@ -96,10 +96,10 @@ class SimpleVertex(QtGui.QGraphicsEllipseItem, Vertex):
                                             self.vertex().get_ad_hoc_dict().simulate_full_data_change)       
 
 
-class SimpleEdge(QtGui.QGraphicsPathItem, Edge):
+class SimpleEdge(QtWidgets.QGraphicsPathItem, Edge):
     def __init__(self, edgeModel, graphadapter, vert1, vert2, parent=None):
         """ """
-        QtGui.QGraphicsPathItem.__init__(self, parent)
+        QtWidgets.QGraphicsPathItem.__init__(self, parent)
         Edge.__init__(self, edgeModel, graphadapter, vert1, vert2)
         self.set_edge_path(LinearEdgePath())
         self.initialise_from_model()
@@ -133,10 +133,10 @@ class SimpleEdge(QtGui.QGraphicsPathItem, Edge):
                                              self.dstBBox().get_ad_hoc_dict().simulate_full_data_change)
 
 
-class SimpleFloatingEdge(QtGui.QGraphicsPathItem, FloatingEdge):
+class SimpleFloatingEdge(QtWidgets.QGraphicsPathItem, FloatingEdge):
     def __init__(self, srcPoint, graph):
         """ """
-        QtGui.QGraphicsPathItem.__init__(self, None)
+        QtWidgets.QGraphicsPathItem.__init__(self, None)
         FloatingEdge.__init__(self, srcPoint, graph)
         self.set_edge_path(LinearEdgePath())
         self.setZValue(0.0)

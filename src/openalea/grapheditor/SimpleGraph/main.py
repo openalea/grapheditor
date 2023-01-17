@@ -1,6 +1,6 @@
 import sys
 
-from openalea.vpltk.qt import QtGui
+from openalea.vpltk.qt import QtWidgets
 from openalea.grapheditor import qt
 from custom_graph_model import Graph
 
@@ -33,10 +33,10 @@ SimpleGraph = qt.QtGraphStrategyMaker( graphView            = SimpleView,
                                        adapterType          = None )
 
 #THE APPLICATION'S MAIN WINDOW
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         """                """
-        QtGui.QMainWindow.__init__(self, parent)
+        QtWidgets.QMainWindow.__init__(self, parent)
         self.__graph = Graph()
         self.__graphView = SimpleGraph.create_view(self.__graph, parent=self)
         self.setCentralWidget(self.__graphView)
@@ -44,8 +44,8 @@ class MainWindow(QtGui.QMainWindow):
 
 #THE ENTRY POINT
 def main(args):
-    app = QtGui.QApplication(args)
-    QtGui.QApplication.processEvents()
+    app = QtWidgets.QApplication(args)
+    QtWidgets.QApplication.processEvents()
     win = MainWindow()
     win.show()
     return app.exec_()
