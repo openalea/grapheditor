@@ -321,7 +321,7 @@ class GraphListenerBase(observer.AbstractListener):
     def get_graphical_edges_connected_to(self, cmodel):
         edgeMap = self.__widgetmap.setdefault("edge",{})
         retSet = set()
-        for edgeModel, graphicalEdges in edgeMap.iteritems():
+        for edgeModel, graphicalEdges in edgeMap.items():
             if hasattr(edgeModel, "__iter__") and cmodel in edgeModel:
                 retSet |= graphicalEdges
             elif edgeModel == cmodel: #what???????
@@ -429,7 +429,7 @@ class GraphListenerBase(observer.AbstractListener):
         if(self.__newEdge):
             try:
                 self.__newEdge.consolidate(self.get_graph())
-            except Exception, e :
+            except Exception as e :
                 pass
             finally:
                 self.__newEdge.remove_from_view(self.get_scene())

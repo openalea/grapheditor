@@ -23,7 +23,7 @@ class NxObservedVertex(Observed):
         self.notify_listeners(("metadata_changed", "position", pos))
 
     def notify_update(self, **kwargs):
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             self.notify_listeners(("metadata_changed", k, v))
 
         pos = self.g().node[self]["position"]
@@ -55,7 +55,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
             if "position" not in kwargs : 
                 kwargs["position"] = [0., 0.]
             else:
-                kwargs["position"] = map(float, kwargs["position"])
+                kwargs["position"] = list(map(float, kwargs["position"]))
             if "color" not in kwargs :
                 kwargs["color"] = QtGui.QColor(0, 0, 0)
 
@@ -92,7 +92,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
     # -- not in the adapter interface (yet): --
     def set_vertex_data(self, vertex, **kwargs):
         if vertex in self.graph:
-            for k, v in kwargs.iteritems():
+            for k, v in kwargs.items():
                 self.graph.node[vertex][k]=v
 
     def set_edge_data(self, edge_proxy, **kwargs):
@@ -102,7 +102,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
 #------------------------
 # -- the graph qt view --
 #------------------------
-from PyQt4 import QtGui, QtCore
+from openalea.vpltk.qt import QtGui, QtCore
 from openalea.grapheditor.qt import (Vertex, View, mixin_method,
                                      QtGraphStrategyMaker,
                                      DefaultGraphicalEdge,

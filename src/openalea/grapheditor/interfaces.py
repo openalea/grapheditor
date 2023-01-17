@@ -31,7 +31,7 @@ class IInterfaceMetaClass(type):
         newCls = type.__new__(cls, name, bases, dict)
 
         ###--CONTRACT CHECKING INFRASTRUCTURE---
-        newCls.__interface_decl__ = [i for i in dict.keys()]
+        newCls.__interface_decl__ = [i for i in list(dict.keys())]
         for base in bases:
             if(hasattr(base, "__interface_decl__")):
                    newCls.__interface_decl__ += base.__interface_decl__
@@ -74,12 +74,11 @@ class IInterfaceMetaClass(type):
         return not stop
 
 
-class IGraphViewStrategies(object):
+class IGraphViewStrategies(object, metaclass=IInterfaceMetaClass):
     """Define implementations of this trait
     class to define the behaviour of the graph.
     For example : DataFlowGraphViewTrait, TreeGraphViewTrait,
     NetworkGraphViewTrait..."""
-    __metaclass__ = IInterfaceMetaClass
 
 
     def get_graph_model_type(cls):
@@ -125,9 +124,7 @@ class IGraphViewStrategies(object):
 
 
 #------*************************************************------#
-class IGraphListener(object):
-    __metaclass__ = IInterfaceMetaClass
-
+class IGraphListener(object, metaclass=IInterfaceMetaClass):
     def vertex_added(self, vtype, vertexModel):
         raise NotImplementedError
 
@@ -167,9 +164,7 @@ class IGraphListener(object):
 
 
 #------*************************************************------#
-class IGraphAdapter(object):
-    __metaclass__ = IInterfaceMetaClass
-
+class IGraphAdapter(object, metaclass=IInterfaceMetaClass):
     def add_vertex(self, *args, **kargs):
         NotImplementedError
 
@@ -213,9 +208,8 @@ class IGraphAdapter(object):
         raise NotImplementedError
 
 #------*************************************************------#
-class IGraphViewConnectable(object):
+class IGraphViewConnectable(object, metaclass=IInterfaceMetaClass):
     """Interface for connectable objects"""
-    __metaclass__ = IInterfaceMetaClass
 
     def set_highlighted(self, *args, **kwargs):
         raise NotImplementedError
@@ -224,9 +218,8 @@ class IGraphViewConnectable(object):
         raise NotImplementedError
 
 #------*************************************************------#
-class IGraphViewElement(object):
+class IGraphViewElement(object, metaclass=IInterfaceMetaClass):
     """Base class for elements in a GraphView"""
-    __metaclass__ = IInterfaceMetaClass
 
     def position_changed(self, *args):
         """Place the element's representation in
@@ -291,10 +284,9 @@ class IGraphViewEdge(IGraphViewElement):
 
 
 #------*************************************************------#
-class IGraphViewFloatingEdge(object):
+class IGraphViewFloatingEdge(object, metaclass=IInterfaceMetaClass):
     """Interface for edges to be drawn during
     creation time, ie while the user drags."""
-    __metaclass__ = IInterfaceMetaClass
 
     def __init__(self, src):
         raise NotImplementedError

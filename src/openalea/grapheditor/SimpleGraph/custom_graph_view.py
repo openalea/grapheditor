@@ -24,8 +24,8 @@ from openalea.grapheditor.qtutils  import mixin_method, extend_qt_scene_event
 from openalea.grapheditor.qtgraphview import Vertex, Edge, FloatingEdge
 from openalea.grapheditor.edgefactory import LinearEdgePath
 from openalea.vpltk.qt import QtGui, QtCore
-from custom_graph_model import Graph as GraphType
-from custom_graph_model import Vertex as VertexModel
+from openalea.grapheditor.SimpleGraph.custom_graph_model import Graph as GraphType
+from openalea.grapheditor.SimpleGraph.custom_graph_model import Vertex as VertexModel
 
 
 
@@ -46,7 +46,7 @@ class SimpleVertex(QtGui.QGraphicsEllipseItem, Vertex):
         Vertex.__init__(self, vertex, graph)
         self.setZValue(1.0)
 
-        #we choose the avocado colors
+        # We choose the avocado colors
         self.setBrush( QtGui.QBrush(QtCore.Qt.yellow) )
         pen=QtGui.QPen(QtCore.Qt.darkGreen)
         pen.setWidth(self.__border_size__-2)

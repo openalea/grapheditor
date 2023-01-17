@@ -37,19 +37,18 @@ __badsymbols = []
 for f in unportableFlags+unportableEnums:
     try:
         __dict__[f] = getattr(QtGui.QGraphicsItem, f)
-    except Exception, e:
+    except Exception as e:
         __badsymbols.append(f)
         continue
 
 if len(__badsymbols):
-    print \
-"""
+    print("""
 The following QtGui.QGraphicsItem enums and flags were not found.
 These are probably used by a graph view. They might exist but your version
 of PyQt is too old so openalea.grapheditor.qtutils will try to compensate
 them:
 %s
-""" % (__badsymbols)
+""" % (__badsymbols))
 
 # if it's just the PyQt Version that is too old we have a hack as
 # the qt flag exists but is simply not exposed.
@@ -80,12 +79,12 @@ class AleaSignal(object):
         self.callbacks[callback] = callback
     def disconnect(self, callback=None):
         if callback is not None:
-            del self.callbacks[callbacks]
+            del self.callbacks[callback]
         else:
             self.callbacks.clear()
     def emit(self, *args):
         # TODO: do type checking?
-        callbacks = self.callbacks.values()[:]
+        callbacks = list(self.callbacks.values())[:]
         for c in callbacks:
             c(*args)
 
@@ -415,8 +414,8 @@ class AleaQGraphicsEmitingTextItem(QtGui.QGraphicsTextItem):
 ###########
 
 class AleaQGraphicsColorWheel(QtGui.QGraphicsEllipseItem, AleaQGraphicsVanishingMixin, AleaQGraphicsButtonMixin):
-    _stopHues    = xrange(0,360,360/12)
-    _stopPos     = [i*1.0/12 for i in xrange(12)]
+    _stopHues    = range(0,360,360//12)
+    _stopPos     = [i*1.0/12 for i in range(12)]
     ######################
     # The Missing Signal #
     ######################
@@ -531,7 +530,7 @@ class Layout(object):
     def setPos(self, pos):
         raise NotImplementedError
 
-    def setMinimumSize(width=None, height=None):
+    def setMinimumSize(self, width=None, height=None):
         if width: self._minWidth = width
         if height: self._minHeight = height
 
