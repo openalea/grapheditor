@@ -211,8 +211,8 @@ class Vertex(Element):
 
     vertex = baselisteners.GraphElementListenerBase.get_observed
 
-    def iter_connectors(self, filter=lambda x:True):
-        return (c for c in self.__connectors if list(filter(c)))
+    def iter_connectors(self, filter_fun=lambda x:True):
+        return (c for c in self.__connectors if filter_fun(c))
 
     def get_scene_center(self):
         """retrieve the center of the widget on the scene"""
