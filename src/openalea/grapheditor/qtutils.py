@@ -434,7 +434,7 @@ class AleaQGraphicsColorWheel(QtWidgets.QGraphicsEllipseItem, AleaQGraphicsVanis
         self.setBrush(QtGui.QBrush(gradient))
 
     def _onButtonPressed(self, event):
-        color = QtGui.QColorDialog.getColor(QtCore.Qt.white, event.widget())
+        color = QtWidgetsQColorDialog.getColor(QtCore.Qt.white, event.widget())
         if color.isValid():
             self.colorChanged.emit(color)
 
@@ -450,7 +450,7 @@ class AleaQGraphicsFontButton(QtWidgets.QGraphicsSimpleTextItem, AleaQGraphicsBu
         self.fontChanged = AleaSignal(QtGui.QFont)
 
     def _onButtonPressed(self, event):
-        font, ok = QtGui.QFontDialog.getFont(event.widget())
+        font, ok = QtWidgetsQFontDialog.getFont(event.widget())
         if ok:
             self.fontChanged.emit(font)
 
@@ -467,7 +467,7 @@ class AleaQGraphicsFontColorButton(AleaQGraphicsFontButton):
         self.setBrush(QtGui.QBrush(QtGui.QColor(255,0,0)))
 
     def _onButtonPressed(self, event):
-        color = QtGui.QColorDialog.getColor(QtCore.Qt.white, event.widget())
+        color = QtWidgetsQColorDialog.getColor(QtCore.Qt.white, event.widget())
         if color.isValid():
             self.fontColorChanged.emit(color)
 
