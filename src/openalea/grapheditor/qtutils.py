@@ -273,7 +273,7 @@ class AleaQGraphicsVanishingMixin(object):
 
         state = self.__timer.state()
         self.__timer.setDuration(self.__vanishingTime)
-        if ((state  == QtCore.QTimeLine.Running) and 
+        if ((state  == QtCore.QTimeLine.Running) and
             (self.__timer.direction() == QtCore.QTimeLine.Forward)):
             self.__timer.setDirection(QtCore.QTimeLine.Backward)
         elif (state == QtCore.QTimeLine.NotRunning):
@@ -434,7 +434,7 @@ class AleaQGraphicsColorWheel(QtWidgets.QGraphicsEllipseItem, AleaQGraphicsVanis
         self.setBrush(QtGui.QBrush(gradient))
 
     def _onButtonPressed(self, event):
-        color = QtWidgetsQColorDialog.getColor(QtCore.Qt.white, event.widget())
+        color = QtWidgets.QColorDialog.getColor(QtCore.Qt.white, event.widget())
         if color.isValid():
             self.colorChanged.emit(color)
 
@@ -450,7 +450,7 @@ class AleaQGraphicsFontButton(QtWidgets.QGraphicsSimpleTextItem, AleaQGraphicsBu
         self.fontChanged = AleaSignal(QtGui.QFont)
 
     def _onButtonPressed(self, event):
-        font, ok = QtWidgetsQFontDialog.getFont(event.widget())
+        font, ok = QtWidgets.QFontDialog.getFont(event.widget())
         if ok:
             self.fontChanged.emit(font)
 
@@ -467,7 +467,7 @@ class AleaQGraphicsFontColorButton(AleaQGraphicsFontButton):
         self.setBrush(QtGui.QBrush(QtGui.QColor(255,0,0)))
 
     def _onButtonPressed(self, event):
-        color = QtWidgetsQColorDialog.getColor(QtCore.Qt.white, event.widget())
+        color = QtWidgets.QColorDialog.getColor(QtCore.Qt.white, event.widget())
         if color.isValid():
             self.fontColorChanged.emit(color)
 
@@ -698,7 +698,7 @@ class AleaQMenu(QtWidgets.QMenu):
         #fix the position of the menu if it tries to popup too close to the lower & right edges.
         #bad fixing strategy probably: what if we were create arabian menus?
         #We should maybe sublcass QMenu to handle screen real estate and reuse it.
-        desktopGeom = QtGui.QApplication.desktop().availableGeometry(self.parent())
+        desktopGeom = QtWidgets.QApplication.desktop().availableGeometry(self.parent())
         contained, edges = qrect_contains(desktopGeom, rect, True)
         if not contained and edges.count(0) > 0:
             dx = edges[0] if edges[0] else edges[1]
