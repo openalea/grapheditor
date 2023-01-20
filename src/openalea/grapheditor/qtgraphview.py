@@ -828,7 +828,7 @@ class DefaultGraphicalEdge(Edge, QtWidgets.QGraphicsPathItem):
     get_view_data = None
 
 
-class DefaultGraphicalFloatingEdge(QtWidgets.QGraphicsPathItem, FloatingEdge):
+class DefaultGraphicalFloatingEdge(FloatingEdge, QtWidgets.QGraphicsPathItem):
     def __init__(self, srcPoint, graph):
         """ """
         QtWidgets.QGraphicsPathItem.__init__(self, None)
