@@ -2,7 +2,7 @@
 #
 #       OpenAlea.Visualea: OpenAlea graphical user interface
 #
-#       Copyright 2006-2009 INRIA - CIRAD - INRA
+#       Copyright 2006-2023 INRIA - CIRAD - INRA
 #
 #       File author(s): Daniel Barbeau <daniel.barbeau@sophia.inria.fr>
 #
@@ -380,7 +380,9 @@ class GraphListenerBase(observer.AbstractListener):
         if(widgets is None): return
         toDiscard = None
         for widgetWeakRef in widgets:
-            if widgetWeakRef() == widget : toDiscard = widgetWeakRef; break
+            if widgetWeakRef() == widget : 
+                toDiscard = widgetWeakRef
+                break
         if toDiscard:
             widgets.discard(toDiscard)
 
@@ -393,8 +395,9 @@ class GraphListenerBase(observer.AbstractListener):
         if t is None:
             return
         model = self.__widgetmap.setdefault(t,{}).pop(widgetWeakRef, None)
-        if not model: return
-            # raise Exception("__widget_died without associated model")
+        if not model: 
+            raise Exception("__widget_died without associated model")
+            return
         modelWidgets = self.__widgetmap.get(model, None)
         if not modelWidgets : return
         modelWidgets.discard(widgetWeakRef)
@@ -409,7 +412,11 @@ class GraphListenerBase(observer.AbstractListener):
         return True if self.__newEdge else False
 
     def _new_edge_start(self, srcPt, etype="default", source=None):
-        self.__newEdge = self.__strategyCls.create_edge_widget("floating-"+etype, srcPt, self.get_graph())
+        self.__newEdge = self.__strategyCls.create_edge_widget(
+            "floating-"+etype, 
+            srcPt, 
+            self.get_graph())
+        
         self.__newEdge.add_to_view(self.get_scene())
         if  source:
             self.__newEdgeSource = source
@@ -445,7 +452,7 @@ class GraphListenerBase(observer.AbstractListener):
 
 
 
-class BlackBoxModel(object):
+class BlackBoxModel:
     """An object that allows to unify certain model (in the MVC meaning) operations calls,
     wether the model is an Observed instance or just any random class.
 

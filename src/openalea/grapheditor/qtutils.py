@@ -2,7 +2,7 @@
 #
 #       OpenAlea.Visualea: OpenAlea graphical user interface
 #
-#       Copyright 2006-2009 INRIA - CIRAD - INRA
+#       Copyright 2006-2023 INRIA - CIRAD - INRA
 1#
 #       File author(s): Daniel Barbeau <daniel.barbeau@sophia.inria.fr>
 #
@@ -10,7 +10,7 @@
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
 #
-#       OpenAlea WebSite : http://openalea.gforge.inria.fr
+#       OpenAlea WebSite : http://openalea.rtfd.io
 #
 ###############################################################################
 
@@ -212,7 +212,7 @@ class MemoRects(QtWidgets.QGraphicsRectItem):
 # A Vanishing GraphicsItem mixing. Appears on #
 # hover in and vanishes on hover out          #
 ###############################################
-class AleaQGraphicsVanishingMixin(object):
+class AleaQGraphicsVanishingMixin:
     __baseOpacity = 0.01
     __numFrames   = 24
 
@@ -310,7 +310,7 @@ class AleaQGraphicsVanishingMixin(object):
 ###########################################
 # A button like mixin for qgraphics items #
 ###########################################
-class AleaQGraphicsButtonMixin(object):
+class AleaQGraphicsButtonMixin:
     def __init__(self, auto=True):
         self.setAcceptedMouseButtons(QtCore.Qt.LeftButton)
         self.pressed = AleaSignal()
@@ -327,7 +327,7 @@ class AleaQGraphicsButtonMixin(object):
 ########################
 # A horizontal toolbar #
 ########################
-class AleaQGraphicsToolbar(QtWidgets.QGraphicsRectItem, AleaQGraphicsVanishingMixin):
+class AleaQGraphicsToolbar(AleaQGraphicsVanishingMixin, QtWidgets.QGraphicsRectItem):
     def __init__(self, parent=None):
         QtWidgets.QGraphicsRectItem.__init__(self, parent)
         AleaQGraphicsVanishingMixin.__init__(self)
@@ -416,7 +416,7 @@ class AleaQGraphicsEmitingTextItem(QtWidgets.QGraphicsTextItem):
 # Buttons #
 ###########
 
-class AleaQGraphicsColorWheel(QtWidgets.QGraphicsEllipseItem, AleaQGraphicsVanishingMixin, AleaQGraphicsButtonMixin):
+class AleaQGraphicsColorWheel(AleaQGraphicsVanishingMixin, AleaQGraphicsButtonMixin, QtWidgets.QGraphicsEllipseItem):
     _stopHues    = range(0,360,360//12)
     _stopPos     = [i*1.0/12 for i in range(12)]
     ######################
@@ -438,7 +438,7 @@ class AleaQGraphicsColorWheel(QtWidgets.QGraphicsEllipseItem, AleaQGraphicsVanis
         if color.isValid():
             self.colorChanged.emit(color)
 
-class AleaQGraphicsFontButton(QtWidgets.QGraphicsSimpleTextItem, AleaQGraphicsButtonMixin):
+class AleaQGraphicsFontButton(AleaQGraphicsButtonMixin, QtWidgets.QGraphicsSimpleTextItem):
     _fontSize=24
     def __init__(self, parent=None):
         QtWidgets.QGraphicsSimpleTextItem.__init__(self, "A", parent)
@@ -474,7 +474,7 @@ class AleaQGraphicsFontColorButton(AleaQGraphicsFontButton):
 #####################################
 # Simple layouts for QGraphicsItems #
 #####################################
-class Layout(object):
+class Layout:
     def __init__(self, parent=None, final=None, margins=(0.,0.,0.,0.),
                  innerMargins=(0.,0.), center=False, mins=(0.,0.)):
         self._parent = parent
