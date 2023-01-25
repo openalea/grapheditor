@@ -291,7 +291,7 @@ class AleaQGraphicsVanishingMixin:
             return
 
         state = self.__timer.state()
-        self.__timer.setDuration(self.__vanishingTime/2)
+        self.__timer.setDuration(self.__vanishingTime//2)
         if state  == QtCore.QTimeLine.Running and \
                self.__timer.direction() == QtCore.QTimeLine.Backward:
             self.__timer.setDirection(QtCore.QTimeLine.Forward)
