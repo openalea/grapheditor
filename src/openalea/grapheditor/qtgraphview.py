@@ -693,7 +693,11 @@ class View(QtWidgets.QGraphicsView, baselisteners.GraphViewBase):
         # self.scale(delta.x(), delta.y())
         xfactor = 1.0 + -event.pixelDelta().x() / 1200
         yfactor = 1.0 + -event.pixelDelta().y() / 1200
-        if xfactor == 1.0: xfactor = yfactor # no horizontal wheel
+        if xfactor == 1.0:
+            xfactor = yfactor
+        if yfactor == 1.0:
+            yfactor = xfactor
+
         self.scale(xfactor, yfactor)
 
     # ----drag and drop----
