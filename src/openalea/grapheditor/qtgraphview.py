@@ -691,14 +691,12 @@ class View(QtWidgets.QGraphicsView, baselisteners.GraphViewBase):
     def wheelEvent(self, event):
         # delta = -event.pixelDelta() / 2400.0 + QtCore.QPoint(1, 1)
         # self.scale(delta.x(), delta.y())
-        xfactor = 1.0 + -event.pixelDelta().x() / 1200
-        yfactor = 1.0 + -event.pixelDelta().y() / 1200
-        if xfactor == 1.0:
-            xfactor = yfactor
-        if yfactor == 1.0:
-            yfactor = xfactor
+        delta = event.pixelDelta()
+        max_delta = max(abs(delta.x()), abs(delta.y()))
+        max_delta /= 1200
+        sign = -1 if ((delta.x()<0) or (delta.y() <0)) else 1
 
-        self.scale(xfactor, yfactor)
+        self.scale_view(1. + sign * max_delta)
 
     # ----drag and drop----
     def accept_drop(self, event):
