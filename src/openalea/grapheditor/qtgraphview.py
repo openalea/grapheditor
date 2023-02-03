@@ -19,7 +19,7 @@ __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
 import weakref, types, gc, warnings
-from openalea.vpltk.qt import QtGui, QtCore, QtWidgets
+from qtpy import QtGui, QtCore, QtWidgets
 from openalea.vpltk.qt.compat import from_qvariant
 from openalea.grapheditor import base, baselisteners, qtutils
 from openalea.grapheditor import edgefactory

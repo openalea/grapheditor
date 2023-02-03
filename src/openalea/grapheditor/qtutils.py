@@ -19,7 +19,7 @@ __revision__ = " $Id$ "
 
 
 import weakref
-from openalea.vpltk.qt import QtCore, QtGui, QtWidgets
+from qtpy import QtCore, QtGui, QtWidgets
 
 
 ##################################################################################

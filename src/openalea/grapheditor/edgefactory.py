@@ -19,7 +19,7 @@
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
-from openalea.vpltk.qt import QtCore, QtGui
+from qtpy import QtCore, QtGui
 
 # def EdgeFactory():
 #     try:

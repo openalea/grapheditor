@@ -23,7 +23,7 @@ from openalea.grapheditor.baselisteners import GraphListenerBase
 from openalea.grapheditor.qtutils  import mixin_method, extend_qt_scene_event
 from openalea.grapheditor.qtgraphview import Vertex, Edge, FloatingEdge
 from openalea.grapheditor.edgefactory import LinearEdgePath
-from openalea.vpltk.qt import QtGui, QtCore, QtWidgets
+from qtpy import QtGui, QtCore, QtWidgets
 from openalea.grapheditor.SimpleGraph.custom_graph_model import Graph as GraphType
 from openalea.grapheditor.SimpleGraph.custom_graph_model import Vertex as VertexModel
 
