@@ -20,7 +20,6 @@ __revision__ = " $Id$ "
 
 import weakref, types, gc, warnings
 from qtpy import QtGui, QtCore, QtWidgets
-# from openalea.vpltk.qt.compat import from_qvariant
 from openalea.grapheditor import base, baselisteners, qtutils
 from openalea.grapheditor import edgefactory
 
