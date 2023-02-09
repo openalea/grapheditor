@@ -6,11 +6,20 @@ import os
 
 from setuptools import setup, find_packages
 
-from openalea.deploy.metainfo import read_metainfo
+name = "OpenAlea.GraphEditor"
+description= "GraphEditor package for OpenAlea."
+long_description= "An generic GGUI API for viewing and interacting with various sorts of graphs."
+authors = "Daniel Barbeau, Christophe Pradal"
+authors_email = "christophe.pradal@cirad.fr"
+url = "https://github.com/openalea/grapheditor"
+license = "Cecill-C"
 
-metadata = read_metainfo('metainfo.ini', verbose=True)
-for key,value in metadata.items():
-    exec("%s = '%s'" % (key, value))
+
+# find version number in src/openalea/core/version.py
+_version = {}
+with open("src/openalea/core/version.py") as fp:
+    exec(fp.read(), _version)
+    version = _version["__version__"]
 
 namespace = 'openalea'
 packages=find_packages('src')
