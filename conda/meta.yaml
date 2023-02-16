@@ -15,8 +15,10 @@ build:
 
 requirements:
   build:
+    - python {{PY_VER}}
     - openalea.deploy
   run:
+    - python
     - openalea.deploy
     - openalea.core
     - qtpy
