@@ -19,7 +19,7 @@
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
-from openalea.vpltk.qt import QtCore, QtGui
+from qtpy import QtCore, QtGui
 
 # def EdgeFactory():
 #     try:
@@ -36,7 +36,7 @@ from openalea.vpltk.qt import QtCore, QtGui
 #         return SplineEdgePath()
 
 
-class LinearEdgePath(object):
+class LinearEdgePath:
     """ Draw edges as line. """
     def __init__(self):
         self.p1 = QtCore.QPointF()
