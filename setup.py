@@ -17,7 +17,7 @@ license = "Cecill-C"
 
 # find version number in src/openalea/core/version.py
 _version = {}
-with open("src/openalea/core/version.py") as fp:
+with open("src/openalea/grapheditor/version.py") as fp:
     exec(fp.read(), _version)
     version = _version["__version__"]
 
