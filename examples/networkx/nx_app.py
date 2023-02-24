@@ -1,7 +1,7 @@
 
 """
 This file demonstrates how to create views for graphs from the
-`networkx <http://networkx.lanl.gov/_>` toolkit. This toolkit
+`networkx <http://networkx.org>` toolkit. This toolkit
 provides efficient graph structures. We want to create a Qt
 widget that allows one to view/create networkx graphs and edit
 them.
