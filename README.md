@@ -1,21 +1,64 @@
+# GraphEditor 
 
-"""
-This file demonstrates how to create views for graphs from the
-`networkx <http://networkx.org>` toolkit. This toolkit
-provides efficient graph structures. We want to create a Qt
-widget that allows one to view/create networkx graphs and edit
-them.
-"""
+**Authors** : Daniel Barbeau
 
-import weakref
-import networkx as nx
+**Institutes** : INRIA / CIRAD 
 
-from functools import cmp_to_key
+**Status** : Python package 
 
-from openalea.grapheditor.all import  Observed, GraphAdapterBase
+**License** : Cecill-C
 
-def cmp(a, b):
-    return (id(a) > id(b)) - (id(a) < id(b))
+**URL** : http://github.com/openalea
+
+## About 
+
+### Description 
+
+The grapheditor package is an attempt to provide a general framework for graph visualisation
+and editing. The goal is to generalise as much as can be of the visualisation and interaction
+process so the users of this package can more easily define how a tree or a dataflow should be
+viewed and interacted with.
+To acheive this, we make more heavy use of the observer/observed system from `openalea.core` and
+define contracts that need to be satisfied by both the observers and the observed so that they
+collaborate nearly out-of-the-box.
+We also create a mapping between graph types and viewing strategies. If the graph is a dataflow
+we will choose the dataflow viewing strategy.
+  
+### Content 
+
+The grapheditor package contains :
+
+  - generic graph observer and interaction classes and interfaces. 
+  - a canvas for Qt
+  - an implementation of a dataflow viewer.
+
+### Requirements 
+
+- OpenAlea.Core
+- Python >= 3.7
+- Qt >= 5.12
+- QtPy (PyQt >= 5.12)
+
+## Installation
+```python
+conda create -n grapheditor python=3.9 openalea.grapheditor qtconsole networkx -c openalea3 -c conda-forge
+```
+The `networkx` is to get the example below working.
+
+## Using GraphEditor 
+
+GraphEditor is a framework. It ships with some graph viewing strategies.
+The `nx_app.py` in `example` demonstrates how to create views for graphs from the networkx (http://networkx.org) toolkit. This toolkit provides efficient graph structures. In this example, we want to create a Qt widget that allow viewing/creating networkx graphs and edit them.
+
+We need to define:
+
+- observers that manage modification according to events, like key pressed, mouse moves, etc.,
+- a node that will represent a vertex on the graph view,
+- a graphical view.
+
+### Example
+We define an observer for the vertices.
+```python
 
 class NxObservedVertex(Observed):
 
@@ -40,7 +83,9 @@ class NxObservedVertex(Observed):
 
     def __getitem__(self, key):
         return self.g().nodes[self][key]
-
+```
+And one for the graph view that manage adding, removing vertices.
+```python
 class NXObservedGraph( GraphAdapterBase, Observed ):
     """An adapter to networkx.Graph"""
     def __init__(self):
@@ -103,18 +148,10 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
     def set_edge_data(self, edge_proxy, **kwargs):
         #nothing right now
         pass
+```
 
-#------------------------
-# -- the graph qt view --
-#------------------------
-from qtpy import QtGui, QtCore, QtWidgets
-from openalea.grapheditor.qt import (Vertex, View, mixin_method,
-                                     QtGraphStrategyMaker,
-                                     DefaultGraphicalEdge,
-                                     DefaultGraphicalFloatingEdge,
-                                     DefaultGraphicalVertex)
-from random import randint as rint # for random colors
-
+We define the node widget that inherits from `openalea.grapheditor.qt.DefaultGraphicalVertex`.
+```python
 class GraphicalNode( DefaultGraphicalVertex ):
     def initialise_from_model(self):
         self.setPos(QtCore.QPointF(*self.graph().graph.nodes[self.vertex()]["position"]))
@@ -127,7 +164,10 @@ class GraphicalNode( DefaultGraphicalVertex ):
 
     def get_view_data(self, key):
         return self.graph().graph.nodes[self.vertex()][key]
+```
 
+Then we add a graphical view class, handling some actions according to events.
+```python
 class GraphicalView( View ):
     def __init__(self, parent):
         View.__init__(self, parent)
@@ -151,20 +191,18 @@ class GraphicalView( View ):
         vertices = scene.get_selected_items(filterType=GraphicalNode, subcall=lambda x:x.vertex())
         scene.remove_vertices(vertices)
         event.setAccepted(True)
-
-
-#-------------------------
-# -- the graph strategy --
-#-------------------------
+```
+We define the graph strategy.
+```python
 GraphicalGraph = QtGraphStrategyMaker( graphView       = GraphicalView,
                                        vertexWidgetMap = {"vertex":GraphicalNode},
                                        edgeWidgetMap   = {"default":DefaultGraphicalEdge,
                                                           "floating-default":DefaultGraphicalFloatingEdge} )
-
-#THE APPLICATION'S MAIN WINDOW
+```
+And finally, we create the application's main window and the `main` to launch the application. In the present example, we create a network of 100 nodes randomly positioned and colored, with the edges also randomly connected to nodes.
+```python
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        """                """
         QtWidgets.QMainWindow.__init__(self, parent)
 
         self.setMinimumSize(800,600)
@@ -182,7 +220,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.graph.add_edge(nodes[rint(0,nmax-1)], nodes[rint(0,nmax-1)])
 
         self.setCentralWidget(self.graphView)
-
 
 if __name__=="__main__":
 
@@ -202,3 +239,9 @@ if __name__=="__main__":
 
     if instance is None :
         app.exec_()
+```
+
+To run the example just do:
+```python
+python nx_app.py
+```
