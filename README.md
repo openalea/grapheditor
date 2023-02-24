@@ -40,11 +40,16 @@ The grapheditor package contains :
 - Qt >= 5.12
 - QtPy (PyQt >= 5.12)
 
+## Installation
+```
+conda create -n grapheditor python=3.9 openalea.grapheditor networkx -c openalea3 -c conda-forge
+```
+The `networkx` is to get the example below working.
 
 ## Using GraphEditor 
 
 GraphEditor is a framework. It ships with some graph viewing strategies.
-The `nx_app.py` in `example` demonstrates how to create views for graphs from the networkx http://networkx.org toolkit. This toolkit provides efficient graph structures. In this example, we want to create a Qt widget that allows one to view/create networkx graphs and edit them.
+The `nx_app.py` in `example` demonstrates how to create views for graphs from the networkx (http://networkx.org) toolkit. This toolkit provides efficient graph structures. In this example, we want to create a Qt widget that allow viewing/creating networkx graphs and edit them.
 
 We need to define:
 
@@ -52,9 +57,9 @@ We need to define:
 - a node that will represent a vertex on the graph view,
 - a graphical view.
 
-### Observers
+### Example
 We define an observer for the vertices.
-```
+```json
 class NxObservedVertex(Observed):
 
     def __init__(self, graph, identifier):
@@ -79,8 +84,8 @@ class NxObservedVertex(Observed):
     def __getitem__(self, key):
         return self.g().nodes[self][key]
 ```
-And one for the graph view:
-```
+And one for the graph view that manage adding, removing vertices.
+```json
 class NXObservedGraph( GraphAdapterBase, Observed ):
     """An adapter to networkx.Graph"""
     def __init__(self):
@@ -145,5 +150,98 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
         pass
 ```
 
+We define the node widget that inherits from `openalea.grapheditor.qt.DefaultGraphicalVertex`.
+```json
+class GraphicalNode( DefaultGraphicalVertex ):
+    def initialise_from_model(self):
+        self.setPos(QtCore.QPointF(*self.graph().graph.nodes[self.vertex()]["position"]))
+        color = self.graph().graph.nodes[self.vertex()]["color"]
+        brush = QtGui.QBrush(color)
+        self.setBrush(brush)
+
+    def store_view_data(self, **kwargs):
+        self.graph().set_vertex_data(self.vertex(), **kwargs)
+
+    def get_view_data(self, key):
+        return self.graph().graph.nodes[self.vertex()][key]
+```
+
+Then we add a graphical view class, handling some actions according to events.
+```json
+class GraphicalView( View ):
+    def __init__(self, parent):
+        View.__init__(self, parent)
+        self.set_default_drop_handler(self.dropHandler)
+        keyPressMapping={ (QtCore.Qt.NoModifier, QtCore.Qt.Key_Delete ):self.removeElement,}
+        self.set_keypress_handler_map(keyPressMapping)
+
+    def mouseDoubleClickEvent(self, event):
+        self.dropHandler(event)
+
+    def dropHandler(self, event):
+        position = self.mapToScene(event.pos())
+        position = [position.x(), position.y()]
+        self.scene().new_vertex(position=position,
+                                color=QtGui.QColor(rint(0,255),rint(0,255),rint(0,255)))
+
+    def removeElement(self, event):
+        scene = self.scene()
+        edges = scene.get_selected_items(filterType=DefaultGraphicalEdge)
+        scene.remove_edges(e.edge() for e in edges)
+        vertices = scene.get_selected_items(filterType=GraphicalNode, subcall=lambda x:x.vertex())
+        scene.remove_vertices(vertices)
+        event.setAccepted(True)
+```
+We define the graph strategy.
+```json
+GraphicalGraph = QtGraphStrategyMaker( graphView       = GraphicalView,
+                                       vertexWidgetMap = {"vertex":GraphicalNode},
+                                       edgeWidgetMap   = {"default":DefaultGraphicalEdge,
+                                                          "floating-default":DefaultGraphicalFloatingEdge} )
+```
+And finally, we create the application's main window and the `main` to launch the application. In the present example, we create a network of 100 nodes randomly positioned and colored, with the edges also randomly connected to nodes.
+```json
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        QtWidgets.QMainWindow.__init__(self, parent)
+
+        self.setMinimumSize(800,600)
+
+        self.graph = NXObservedGraph()
+        self.graphView = GraphicalGraph.create_view(self.graph, parent=self)
+        nodes = []
+        nmax = 100
+        emax = 100
+        for p in range(nmax):
+            node = self.graph.new_vertex(p, position=[rint(0,200), rint(0,200)],
+                                   color=QtGui.QColor(rint(0,255),rint(0,255),rint(0,255)))
+            nodes.append(node)
+        for p in range(emax):
+            self.graph.add_edge(nodes[rint(0,nmax-1)], nodes[rint(0,nmax-1)])
+
+        self.setCentralWidget(self.graphView)
+
+if __name__=="__main__":
+
+    instance = QtWidgets.QApplication.instance()
+    if instance is None :
+        app = QtWidgets.QApplication([])
+    else :
+        app = instance
+
+    win = MainWindow()
+    win.show()
 
 
+    graph = win.graph
+    nxgraph = graph.graph
+    view = win.graphView
+
+    if instance is None :
+        app.exec_()
+```
+
+To run the example just do:
+```
+python nx_app.py
+```
