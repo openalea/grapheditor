@@ -41,7 +41,7 @@ The grapheditor package contains :
 
 ## Installation
 ```python
-conda create -n grapheditor python=3.9 openalea.grapheditor networkx -c openalea3 -c conda-forge
+conda create -n grapheditor python=3.9 openalea.grapheditor qtconsole networkx -c openalea3 -c conda-forge
 ```
 The `networkx` is to get the example below working.
 
