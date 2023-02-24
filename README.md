@@ -18,7 +18,7 @@ The grapheditor package is an attempt to provide a general framework for graph v
 and editing. The goal is to generalise as much as can be of the visualisation and interaction
 process so the users of this package can more easily define how a tree or a dataflow should be
 viewed and interacted with.
-To acheive this, we make more heavy use of the observer/observed system from openalea.core and
+To acheive this, we make more heavy use of the observer/observed system from `openalea.core` and
 define contracts that need to be satisfied by both the observers and the observed so that they
 collaborate nearly out-of-the-box.
 We also create a mapping between graph types and viewing strategies. If the graph is a dataflow
@@ -35,13 +35,12 @@ The grapheditor package contains :
 ### Requirements 
 
 - OpenAlea.Core
-- qtpy
 - Python >= 3.7
 - Qt >= 5.12
 - QtPy (PyQt >= 5.12)
 
 ## Installation
-```
+```python
 conda create -n grapheditor python=3.9 openalea.grapheditor networkx -c openalea3 -c conda-forge
 ```
 The `networkx` is to get the example below working.
@@ -59,7 +58,8 @@ We need to define:
 
 ### Example
 We define an observer for the vertices.
-```json
+```python
+
 class NxObservedVertex(Observed):
 
     def __init__(self, graph, identifier):
@@ -85,7 +85,7 @@ class NxObservedVertex(Observed):
         return self.g().nodes[self][key]
 ```
 And one for the graph view that manage adding, removing vertices.
-```json
+```python
 class NXObservedGraph( GraphAdapterBase, Observed ):
     """An adapter to networkx.Graph"""
     def __init__(self):
@@ -151,7 +151,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
 ```
 
 We define the node widget that inherits from `openalea.grapheditor.qt.DefaultGraphicalVertex`.
-```json
+```python
 class GraphicalNode( DefaultGraphicalVertex ):
     def initialise_from_model(self):
         self.setPos(QtCore.QPointF(*self.graph().graph.nodes[self.vertex()]["position"]))
@@ -167,7 +167,7 @@ class GraphicalNode( DefaultGraphicalVertex ):
 ```
 
 Then we add a graphical view class, handling some actions according to events.
-```json
+```python
 class GraphicalView( View ):
     def __init__(self, parent):
         View.__init__(self, parent)
@@ -193,14 +193,14 @@ class GraphicalView( View ):
         event.setAccepted(True)
 ```
 We define the graph strategy.
-```json
+```python
 GraphicalGraph = QtGraphStrategyMaker( graphView       = GraphicalView,
                                        vertexWidgetMap = {"vertex":GraphicalNode},
                                        edgeWidgetMap   = {"default":DefaultGraphicalEdge,
                                                           "floating-default":DefaultGraphicalFloatingEdge} )
 ```
 And finally, we create the application's main window and the `main` to launch the application. In the present example, we create a network of 100 nodes randomly positioned and colored, with the edges also randomly connected to nodes.
-```json
+```python
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
@@ -242,6 +242,6 @@ if __name__=="__main__":
 ```
 
 To run the example just do:
-```
+```python
 python nx_app.py
 ```
