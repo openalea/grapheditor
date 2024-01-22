@@ -1,5 +1,6 @@
 networkx GraphEditor strategy tutorial
 ######################################
+
 This tutorial describes how to implement a new GraphEditor strategy.
 GraphEditor is a system that implements low level mecanisms needed to
 do editing of graphs and uses so called "strategies" to describe
