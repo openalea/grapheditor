@@ -4,7 +4,7 @@ __revision__ = "$Id$"
 import sys
 import os
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 name = "OpenAlea.GraphEditor"
 description= "GraphEditor package for OpenAlea."
@@ -22,13 +22,10 @@ with open("src/openalea/grapheditor/version.py") as fp:
     version = _version["__version__"]
 
 namespace = 'openalea'
-packages=find_packages('src')
+packages = find_namespace_packages(where='src', include=['openalea.*'])
 package_dir={'': 'src'}
 
 setup_requires = ['openalea.deploy']
-install_requires = []
-# web sites where to find eggs
-dependency_links = []
 
 # setup function call
 #
@@ -56,8 +53,6 @@ setup(
 
     # Dependencies
     setup_requires=setup_requires,
-    install_requires=install_requires,
-    dependency_links=dependency_links,
 
     include_package_data=True,
 )
