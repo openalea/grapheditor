@@ -4,22 +4,28 @@ __revision__ = "$Id$"
 import sys
 import os
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
-from openalea.deploy.metainfo import read_metainfo
+name = "OpenAlea.GraphEditor"
+description= "GraphEditor package for OpenAlea."
+long_description= "An generic GGUI API for viewing and interacting with various sorts of graphs."
+authors = "Daniel Barbeau, Christophe Pradal"
+authors_email = "christophe.pradal@cirad.fr"
+url = "https://github.com/openalea/grapheditor"
+license = "Cecill-C"
 
-metadata = read_metainfo('metainfo.ini', verbose=True)
-for key,value in metadata.iteritems():
-    exec("%s = '%s'" % (key, value))
+
+# find version number in src/openalea/core/version.py
+_version = {}
+with open("src/openalea/grapheditor/version.py") as fp:
+    exec(fp.read(), _version)
+    version = _version["__version__"]
 
 namespace = 'openalea'
-packages=find_packages('src')
+packages = find_namespace_packages(where='src', include=['openalea.*'])
 package_dir={'': 'src'}
 
 setup_requires = ['openalea.deploy']
-install_requires = []
-# web sites where to find eggs
-dependency_links = ['http://openalea.gforge.inria.fr/pi']
 
 # setup function call
 #
@@ -40,15 +46,13 @@ setup(
     package_dir= package_dir,
 
     # Namespace packages creation by deploy
-    namespace_packages=[namespace],
-    create_namespaces=True,
+    #namespace_packages=[namespace],
+    #create_namespaces=True,
 
     zip_safe=False,
 
     # Dependencies
     setup_requires=setup_requires,
-    install_requires=install_requires,
-    dependency_links=dependency_links,
 
     include_package_data=True,
 )

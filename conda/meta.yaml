@@ -1,31 +1,34 @@
-{% set version = "2.0.1" %}
+{% set data = load_setup_py_data() %}
 
 package:
   name: openalea.grapheditor
-  version: {{ version }}
+  version: {{ data.get('version') }}
 
 source:
   path: ..
 
 build:
+  noarch: python
   preserve_egg_dir: True
   number: 0
-  script: python setup.py install --prefix=$PREFIX
+  script: {{PYTHON}} setup.py install 
 
 requirements:
   build:
+    - python {{PY_VER}}
     - openalea.deploy
   run:
+    - python
     - openalea.deploy
     - openalea.core
-    - openalea.vpltk
+    - qtpy
 
 test:
   imports:
     - openalea.grapheditor
 
 about:
-  home: http://github.com/openalea/visualea
+  home: {{ data.get('url') }}
   license: Cecill-c License
-  summary: GraphEditor package for OpenAlea.
+  summary: {{ data.get('description') }}
 

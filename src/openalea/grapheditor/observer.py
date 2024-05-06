@@ -108,8 +108,8 @@ class Observed(object):
                if(not obs.is_notification_locked()):
                    try:
                        obs.call_notify(self, event)
-                   except Exception, e:
-                       print "Warning :", str(self), "notification of", str(obs), "failed", e
+                   except Exception as e:
+                       print("Warning :", str(self), "notification of", str(obs), "failed", e)
                        traceback.print_exc()
        self.__isNotifying = False
        

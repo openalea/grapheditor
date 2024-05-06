@@ -1,16 +1,21 @@
 
 """
 This file demonstrates how to create views for graphs from the
-`networkx <http://networkx.lanl.gov/_>` toolkit. This toolkit
+`networkx <http://networkx.org>` toolkit. This toolkit
 provides efficient graph structures. We want to create a Qt
 widget that allows one to view/create networkx graphs and edit
 them.
 """
 
-import networkx as nx
-from openalea.grapheditor.all import  Observed, GraphAdapterBase
 import weakref
+import networkx as nx
 
+from functools import cmp_to_key
+
+from openalea.grapheditor.all import  Observed, GraphAdapterBase
+
+def cmp(a, b):
+    return (id(a) > id(b)) - (id(a) < id(b))
 
 class NxObservedVertex(Observed):
 
@@ -23,18 +28,18 @@ class NxObservedVertex(Observed):
         self.notify_listeners(("metadata_changed", "position", pos))
 
     def notify_update(self, **kwargs):
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             self.notify_listeners(("metadata_changed", k, v))
 
-        pos = self.g().node[self]["position"]
+        pos = self.g().nodes[self]["position"]
         self.notify_position(pos)
 
     def __setitem__(self, key, value):
-        self.g().node[self][key] = value
+        self.g().nodes[self][key] = value
         self.notify_update()
 
     def __getitem__(self, key):
-        return self.g().node[self][key]
+        return self.g().nodes[self][key]
 
 class NXObservedGraph( GraphAdapterBase, Observed ):
     """An adapter to networkx.Graph"""
@@ -55,7 +60,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
             if "position" not in kwargs : 
                 kwargs["position"] = [0., 0.]
             else:
-                kwargs["position"] = map(float, kwargs["position"])
+                kwargs["position"] = list(map(float, kwargs["position"]))
             if "color" not in kwargs :
                 kwargs["color"] = QtGui.QColor(0, 0, 0)
 
@@ -71,7 +76,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
 
     def add_edge(self, src_vertex, tgt_vertex, **kwargs):
         edge = [src_vertex, tgt_vertex]
-        edge.sort(lambda x, y: cmp(id(x), id(y)))
+        edge.sort(key=cmp_to_key(cmp))
         edge = tuple(edge)
         if self.graph.has_edge(*edge):
             return
@@ -81,7 +86,7 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
 
     def remove_edge(self, src_vertex, tgt_vertex):
         edge =  [src_vertex, tgt_vertex]
-        edge.sort(lambda x, y: cmp(id(x), id(y)))
+        edge.sort(key=cmp_to_key(cmp))
         edge = tuple(edge)
         self.graph.remove_edge(edge[0], edge[1])
         self.notify_listeners(("edge_removed", ("default",edge)))
@@ -92,17 +97,17 @@ class NXObservedGraph( GraphAdapterBase, Observed ):
     # -- not in the adapter interface (yet): --
     def set_vertex_data(self, vertex, **kwargs):
         if vertex in self.graph:
-            for k, v in kwargs.iteritems():
-                self.graph.node[vertex][k]=v
+            for k, v in kwargs.items():
+                self.graph.nodes[vertex][k]=v
 
     def set_edge_data(self, edge_proxy, **kwargs):
-        #nothing right now"
+        #nothing right now
         pass
 
 #------------------------
 # -- the graph qt view --
 #------------------------
-from PyQt4 import QtGui, QtCore
+from qtpy import QtGui, QtCore, QtWidgets
 from openalea.grapheditor.qt import (Vertex, View, mixin_method,
                                      QtGraphStrategyMaker,
                                      DefaultGraphicalEdge,
@@ -112,8 +117,8 @@ from random import randint as rint # for random colors
 
 class GraphicalNode( DefaultGraphicalVertex ):
     def initialise_from_model(self):
-        self.setPos(QtCore.QPointF(*self.graph().graph.node[self.vertex()]["position"]))
-        color = self.graph().graph.node[self.vertex()]["color"]
+        self.setPos(QtCore.QPointF(*self.graph().graph.nodes[self.vertex()]["position"]))
+        color = self.graph().graph.nodes[self.vertex()]["color"]
         brush = QtGui.QBrush(color)
         self.setBrush(brush)
 
@@ -121,7 +126,7 @@ class GraphicalNode( DefaultGraphicalVertex ):
         self.graph().set_vertex_data(self.vertex(), **kwargs)
 
     def get_view_data(self, key):
-        return self.graph().graph.node[self.vertex()][key]
+        return self.graph().graph.nodes[self.vertex()][key]
 
 class GraphicalView( View ):
     def __init__(self, parent):
@@ -157,10 +162,10 @@ GraphicalGraph = QtGraphStrategyMaker( graphView       = GraphicalView,
                                                           "floating-default":DefaultGraphicalFloatingEdge} )
 
 #THE APPLICATION'S MAIN WINDOW
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         """                """
-        QtGui.QMainWindow.__init__(self, parent)
+        QtWidgets.QMainWindow.__init__(self, parent)
 
         self.setMinimumSize(800,600)
 
@@ -181,9 +186,9 @@ class MainWindow(QtGui.QMainWindow):
 
 if __name__=="__main__":
 
-    instance = QtGui.QApplication.instance()
+    instance = QtWidgets.QApplication.instance()
     if instance is None :
-        app = QtGui.QApplication([])
+        app = QtWidgets.QApplication([])
     else :
         app = instance
 

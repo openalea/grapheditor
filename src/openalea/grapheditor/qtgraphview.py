@@ -19,8 +19,7 @@ __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
 import weakref, types, gc, warnings
-from openalea.vpltk.qt import QtGui, QtCore
-from openalea.vpltk.qt.compat import from_qvariant
+from qtpy import QtGui, QtCore, QtWidgets
 from openalea.grapheditor import base, baselisteners, qtutils
 from openalea.grapheditor import edgefactory
 
@@ -79,7 +78,7 @@ class Element(baselisteners.GraphElementListenerBase):
         self.setPos(point)
 
     def lock_position(self, val=True):
-        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, not val)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, not val)
 
     def default_position(self):
         return [0.0, 0.0]
@@ -163,10 +162,10 @@ class Vertex(Element):
     can override it completely in your subclass."""
 
 
-    class InvisibleConnector(QtGui.QGraphicsEllipseItem, Connector):
+    class InvisibleConnector(QtWidgets.QGraphicsEllipseItem, Connector):
         size = 10
         def __init__(self, parent, *args, **kwargs):
-            QtGui.QGraphicsEllipseItem.__init__(self, 0, 0 , self.size, self.size, None)
+            QtWidgets.QGraphicsEllipseItem.__init__(self, 0, 0 , self.size, self.size, None)
             Connector.__init__(self, *args, **kwargs)
             self.setBrush(QtGui.QBrush(QtCore.Qt.darkGreen))
             # Needs to be visible or else won't receive events
@@ -185,7 +184,7 @@ class Vertex(Element):
         def paint(self, painter, options, widget):
             pass
 
-        itemChange = qtutils.mixin_method(Connector, QtGui.QGraphicsEllipseItem,
+        itemChange = qtutils.mixin_method(Connector, QtWidgets.QGraphicsEllipseItem,
                                   "itemChange")
 
     ####################################
@@ -202,8 +201,8 @@ class Vertex(Element):
         self.__defaultConnector = None
 
         self.setZValue(1.0)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
         self.setFlag(qtutils.ItemSendsGeometryChanges)
         self.__paintStrategy = defaultPaint
         if defaultCenterConnector:
@@ -211,8 +210,8 @@ class Vertex(Element):
 
     vertex = baselisteners.GraphElementListenerBase.get_observed
 
-    def iter_connectors(self, filter=lambda x:True):
-        return (c for c in self.__connectors if filter(c))
+    def iter_connectors(self, filter_fun=lambda x:True):
+        return (c for c in self.__connectors if filter_fun(c))
 
     def get_scene_center(self):
         """retrieve the center of the widget on the scene"""
@@ -270,12 +269,12 @@ class Vertex(Element):
         if sc:
             sc.invalidate()
 
-        if change == QtGui.QGraphicsItem.ItemVisibleHasChanged:
+        if change == QtWidgets.QGraphicsItem.ItemVisibleHasChanged:
             self.notify_position_change()
 
         elif change == qtutils.ItemPositionHasChanged:
             self.deaf(True)
-            point = QtCore.QPointF(from_qvariant(value))
+            point = QtCore.QPointF(value)
             self.store_view_data(position=[point.x(), point.y()])
             self.deaf(False)
             self.notify_position_change()
@@ -296,7 +295,7 @@ class Edge(Element):
 
     def __init__(self, edge=None, graph=None, src=None, dst=None):
         Element.__init__(self, edge, graph)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
         self.setZValue(0.5)
         self.srcPoint = QtCore.QPointF()
         self.dstPoint = QtCore.QPointF()
@@ -383,19 +382,17 @@ class Edge(Element):
     def shape(self):
         path = self.__edge_creator.shape()
         if not path:
-            return QtGui.QGraphicsPathItem.shape(self)
+            return QtWidgets.QGraphicsPathItem.shape(self)
         else:
             return path
 
     def itemChange(self, change, value):
         """ Callback when item has been modified (move...) """
         # hack to update start and end points:
-        if change == QtGui.QGraphicsItem.ItemVisibleHasChanged:
+        if change == QtWidgets.QGraphicsItem.ItemVisibleHasChanged:
             try:
-                srcGraphical = filter(lambda x: isinstance(x(), Connector),
-                                      self.srcBBox().listeners)[0]()
-                dstGraphical = filter(lambda x: isinstance(x(), Connector),
-                                      self.dstBBox().listeners)[0]()
+                srcGraphical = [x for x in self.srcBBox().listeners if isinstance(x(), Connector)][0]()
+                dstGraphical = [x for x in self.dstBBox().listeners if isinstance(x(), Connector)][0]()
                 srcGraphical.notify_position_change()
                 dstGraphical.notify_position_change()
             except:
@@ -405,7 +402,7 @@ class Edge(Element):
                 # -other.
                 pass
 
-        elif (change == QtGui.QGraphicsItem.ItemSelectedChange):
+        elif (change == QtWidgets.QGraphicsItem.ItemSelectedChange):
             if(bool(value)):
                 color = QtCore.Qt.blue
             else:
@@ -416,7 +413,7 @@ class Edge(Element):
                                    QtCore.Qt.RoundCap,
                                    QtCore.Qt.RoundJoin))
 
-        return QtGui.QGraphicsItem.itemChange(self, change, value)
+        return QtWidgets.QGraphicsItem.itemChange(self, change, value)
 
 
 class FloatingEdge(Edge):
@@ -435,7 +432,7 @@ class FloatingEdge(Edge):
             if(srcVertex == None or dstVertex == None):
                 return
             self.scene().add_edge(srcVertex, dstVertex)
-        except Exception, e:
+        except Exception as e:
             pass
             # print "consolidation failed :", type(e), e,\
             # ". Are you sure you plugged the right ports?"
@@ -463,13 +460,13 @@ class FloatingEdge(Edge):
 
 
 #------*************************************************------#
-class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
+class Scene(QtWidgets.QGraphicsScene, baselisteners.GraphListenerBase):
     """A Qt implementation of GraphListenerBase"""
 
     __instanceMap__ = weakref.WeakKeyDictionary()
 
     # A few signals that strangely enough don't exist in QWidget
-    focusedItemChanged = QtCore.Signal(QtGui.QGraphicsScene, Element)
+    focusedItemChanged = QtCore.Signal(QtWidgets.QGraphicsScene, Element)
 
 
     @classmethod
@@ -486,7 +483,7 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
             return Scene(parent)
 
     def __init__(self, parent):
-        QtGui.QGraphicsScene.__init__(self, parent)
+        QtWidgets.QGraphicsScene.__init__(self, parent)
         baselisteners.GraphListenerBase.__init__(self)
         self.__selectAdditions = False # select newly added items
         self.__views = set()
@@ -552,8 +549,8 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
         """ Remove all items from the scene """
         # do not use the following even though it is faster.
         # qt might just delete stuff that is owned by Python.
-        # QtGui.QGraphicsScene.clear(self)
-        items = self.items()
+        # QtWidgets.QGraphicsScene.clear(self)
+        items = list(self.items())
         for i in items:
             self.removeItem(i) # let gc do the rest.
         baselisteners.GraphListenerBase.clear(self)
@@ -567,12 +564,12 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
             pos = event.scenePos()
             pos = [pos.x(), pos.y()]
             self._new_edge_set_destination(*pos)
-        QtGui.QGraphicsScene.mouseMoveEvent(self, event)
+        QtWidgets.QGraphicsScene.mouseMoveEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if(self._is_creating_edge()):
             self._new_edge_end()
-        QtGui.QGraphicsScene.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsScene.mouseReleaseEvent(self, event)
 
     #########################
     # Other utility methods #
@@ -590,7 +587,7 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
         if filterType and not isinstance(filterType, tuple):
             filterType = filterType,
         return [ (item if subcall is None else subcall(item))
-                 for item in self.items() if
+                 for item in list(self.items()) if
                  (True if filterType is None else isinstance(item, filterType))]
 
     def get_selected_items(self, filterType=None, subcall=None):
@@ -598,7 +595,7 @@ class Scene(QtGui.QGraphicsScene, baselisteners.GraphListenerBase):
         if filterType and not isinstance(filterType, tuple):
             filterType = filterType,
         return [ (item if subcall is None else subcall(item))
-                 for item in self.items() if item.isSelected() and
+                 for item in list(self.items()) if item.isSelected() and
                  (True if filterType is None else isinstance(item, filterType))]
 
     def get_selection_center(self, selection=None):
@@ -627,7 +624,7 @@ def deprecate(methodName, newName=None):
     return deprecation_wrapper
 
 
-class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
+class View(QtWidgets.QGraphicsView, baselisteners.GraphViewBase):
     """A View implementing client customisation """
 
     class AcceptEvent(object):
@@ -635,19 +632,19 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
             self.accept = False
 
     # A few signals that strangely enough don't exist in QWidget
-    closing = QtCore.Signal(QtGui.QGraphicsView, QtGui.QGraphicsScene)
+    closing = QtCore.Signal(QtWidgets.QGraphicsView, QtWidgets.QGraphicsScene)
 
     # Some other signals that can be useful
-    copyRequest = QtCore.Signal(QtGui.QGraphicsView, QtGui.QGraphicsScene, AcceptEvent)
-    cutRequest = QtCore.Signal(QtGui.QGraphicsView, QtGui.QGraphicsScene, AcceptEvent)
-    pasteRequest = QtCore.Signal(QtGui.QGraphicsView, QtGui.QGraphicsScene, AcceptEvent)
-    deleteRequest = QtCore.Signal(QtGui.QGraphicsView, QtGui.QGraphicsScene, AcceptEvent)
+    copyRequest = QtCore.Signal(QtWidgets.QGraphicsView, QtWidgets.QGraphicsScene, AcceptEvent)
+    cutRequest = QtCore.Signal(QtWidgets.QGraphicsView, QtWidgets.QGraphicsScene, AcceptEvent)
+    pasteRequest = QtCore.Signal(QtWidgets.QGraphicsView, QtWidgets.QGraphicsScene, AcceptEvent)
+    deleteRequest = QtCore.Signal(QtWidgets.QGraphicsView, QtWidgets.QGraphicsScene, AcceptEvent)
 
     ####################################
     # ----Instance members follow----  #
     ####################################
     def __init__(self, parent):
-        QtGui.QGraphicsView.__init__(self, parent)
+        QtWidgets.QGraphicsView.__init__(self, parent)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
 
@@ -657,11 +654,11 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         self.__releaseHotkeyMap = {}
 
         # ---Qt Stuff---
-#        self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
+#        self.setCacheMode(QtWidgets.QGraphicsView.CacheBackground)
         self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
-        self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
+        self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorViewCenter)
+        self.setDragMode(QtWidgets.QGraphicsView.RubberBandDrag)
 
     def setScene(self, scene):
         """ Overload of QGraphicsView.setScene to correctly handle multiple views
@@ -670,7 +667,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         if scene is not None:
             scene.register_view(self)
             self.closing.connect(scene.unregister_view)
-        QtGui.QGraphicsView.setScene(self, scene)
+        QtWidgets.QGraphicsView.setScene(self, scene)
 
     def set_canvas(self, scene):
         self.setScene(scene)
@@ -691,15 +688,21 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         self.__defaultDropHandler = handler
 
     def wheelEvent(self, event):
-        delta = -event.delta() / 2400.0 + 1.0
-        self.scale_view(delta)
+        # delta = -event.pixelDelta() / 2400.0 + QtCore.QPoint(1, 1)
+        # self.scale(delta.x(), delta.y())
+        delta = event.pixelDelta()
+        max_delta = max(abs(delta.x()), abs(delta.y()))
+        max_delta /= 1200
+        sign = -1 if ((delta.x()<0) or (delta.y() <0)) else 1
+
+        self.scale_view(1. + sign * max_delta)
 
     # ----drag and drop----
     def accept_drop(self, event):
         """ Return the format of the object if a handler is registered for it.
         If not, if there is a default handler, returns True, else returns False.
         """
-        for format in self.__mimeHandlers.keys():
+        for format in list(self.__mimeHandlers.keys()):
             if event.mimeData().hasFormat(format): return format
         return True if self.__defaultDropHandler else False
 
@@ -727,7 +730,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         # as it does a "move" instead of a "copy"
         # and the item is deleted from where it was
         # dragged from :
-        # QtGui.QGraphicsView.dropEvent(self, event)
+        # QtWidgets.QGraphicsView.dropEvent(self, event)
 
     # ----hotkeys----
     def keyPressEvent(self, event):
@@ -736,7 +739,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         if(action):
             action(event)
         else:
-            QtGui.QGraphicsView.keyPressEvent(self, event)
+            QtWidgets.QGraphicsView.keyPressEvent(self, event)
 
         if not event.isAccepted():
             key = event.key()
@@ -762,7 +765,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         if(action):
             action(event)
         else:
-            QtGui.QGraphicsView.keyReleaseEvent(self, event)
+            QtWidgets.QGraphicsView.keyReleaseEvent(self, event)
 
     # ----low level and Qt-Related----
     def closeEvent(self, evt):
@@ -772,7 +775,7 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
         if self.testAttribute(QtCore.Qt.WA_DeleteOnClose):
             self.closing.emit(self, self.scene())
             self.setScene(None)
-        return QtGui.QGraphicsView.closeEvent(self, evt)
+        return QtWidgets.QGraphicsView.closeEvent(self, evt)
 
     #########################
     # Other utility methods #
@@ -801,11 +804,16 @@ class View(QtGui.QGraphicsView, baselisteners.GraphViewBase):
     post_addition = deprecate("post_addition")
     notify = deprecate("notify")
 
-
-
 if __debug__:
-    import interfaces
-    interfaces.IGraphListener.check(Scene)
+# This part of code raise a warning : 
+## UserWarning: Object <class 'openalea.grapheditor.qtgraphview.Scene'> 
+ # does not belong to the Interface IGraphListener
+ # Unimplemented : 
+ #      __qualname__
+ #    from . import interfaces
+ #    interfaces.IGraphListener.check(Scene)
+    pass
+
 
 def QtGraphStrategyMaker(*args, **kwargs):
     _type = base.GraphStrategyMaker(*args, **kwargs)
@@ -815,9 +823,9 @@ def QtGraphStrategyMaker(*args, **kwargs):
 ################################
 # SOME DEFAULT IMPLEMENTATIONS #
 ################################
-class DefaultGraphicalEdge(Edge, QtGui.QGraphicsPathItem):
+class DefaultGraphicalEdge(Edge, QtWidgets.QGraphicsPathItem):
     def __init__(self, edge=None, graph=None, src=None, dest=None):
-        QtGui.QGraphicsPathItem.__init__(self, None)
+        QtWidgets.QGraphicsPathItem.__init__(self, None)
         Edge.__init__(self, edge, graph, src, dest)
         self.set_edge_creator(edgefactory.LinearEdgePath())
 
@@ -825,23 +833,23 @@ class DefaultGraphicalEdge(Edge, QtGui.QGraphicsPathItem):
     get_view_data = None
 
 
-class DefaultGraphicalFloatingEdge(QtGui.QGraphicsPathItem, FloatingEdge):
+class DefaultGraphicalFloatingEdge(FloatingEdge, QtWidgets.QGraphicsPathItem):
     def __init__(self, srcPoint, graph):
         """ """
-        QtGui.QGraphicsPathItem.__init__(self, None)
+        QtWidgets.QGraphicsPathItem.__init__(self, None)
         FloatingEdge.__init__(self, srcPoint, graph)
         self.set_edge_creator(edgefactory.LinearEdgePath())
 
 
-class DefaultGraphicalVertex(Vertex, QtGui.QGraphicsEllipseItem):
+class DefaultGraphicalVertex(Vertex, QtWidgets.QGraphicsEllipseItem):
     circleSize = 10.0 * 2
     def __init__(self, vertex, graph):
-        QtGui.QGraphicsEllipseItem .__init__(self, 0, 0, self.circleSize, self.circleSize, None)
+        QtWidgets.QGraphicsEllipseItem .__init__(self, 0, 0, self.circleSize, self.circleSize, None)
         Vertex.__init__(self, vertex, graph, defaultCenterConnector=True)
 
-    mousePressEvent = qtutils.mixin_method(Vertex, QtGui.QGraphicsEllipseItem,
+    mousePressEvent = qtutils.mixin_method(Vertex, QtWidgets.QGraphicsEllipseItem,
                                    "mousePressEvent")
-    itemChange = qtutils.mixin_method(Vertex, QtGui.QGraphicsEllipseItem,
+    itemChange = qtutils.mixin_method(Vertex, QtWidgets.QGraphicsEllipseItem,
                                       "itemChange")
-    paint = qtutils.mixin_method(QtGui.QGraphicsEllipseItem, None,
+    paint = qtutils.mixin_method(QtWidgets.QGraphicsEllipseItem, None,
                          "paint")

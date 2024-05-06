@@ -142,8 +142,8 @@ def GraphStrategyMaker(graphView, vertexWidgetMap, edgeWidgetMap,
         __vertexWidgetMap__      = vertexWidgetMap
         __edgeWidgetMap__        = edgeWidgetMap
         __connectorTypes__       = connectorTypes
-        __graphViewInitialiser__ = staticmethod(graphViewInitialiser \
-                                                if graphViewInitialiser \
+        __graphViewInitialiser__ = staticmethod(graphViewInitialiser 
+                                                if graphViewInitialiser 
                                                 else lambda x,y:x)
         __adapterType__          = adapterType
 
@@ -167,9 +167,9 @@ def GraphStrategyMaker(graphView, vertexWidgetMap, edgeWidgetMap,
 
         @classmethod
         def create_edge_widget(cls, etype, *args, **kwargs):
-            VertexClass = cls.__edgeWidgetMap__.get(etype)
-            if(VertexClass):
-                return VertexClass(*args, **kwargs)
+            EdgeClass = cls.__edgeWidgetMap__.get(etype)
+            if(EdgeClass):
+                return EdgeClass(*args, **kwargs)
             else:
                 raise Exception("etype not found")
 
