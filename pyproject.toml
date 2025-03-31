@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openalea.grapheditor"
+authors = [
+  { name = "Daniel Barbeau"},
+  { name = "Christophe Pradal"},
+]
+description = "An generic GUI API for viewing and interacting with various sorts of graphs"
+license = {file = "LICENSE.txt"}
+keywords = ["openalea", "graph", "qt"]
+requires-python = ">=3.8"
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+dynamic = ["version", "readme"]
+dependencies = [
+  "qtpy",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+doc = [
+  "pydata-sphinx-theme",
+  "myst-parser",
+  "sphinx-favicon",
+  "ipykernel",
+  "ipython_genutils",
+  "nbsphinx",
+]
+
+[project.urls]
+Homepage = "https://openalea.readthedocs.io/"
+"Bug Tracker" = "https://github.com/openalea/grapheditor/issues"
+Discussions = "https://github.com/openalea/grapheditor/discussions"
+Changelog = "https://github.com/openalea/grapheditor/releases"
+
+[tool.setuptools.dynamic]
+version = {attr = "openalea.grapheditor.version.__version__"}
+readme = {file = ["README.md"]}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["*"]
+
+[tool.setuptools.package-data]
+"*" = ["*"]
