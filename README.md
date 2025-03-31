@@ -18,7 +18,7 @@ The grapheditor package is an attempt to provide a general framework for graph v
 and editing. The goal is to generalise as much as can be of the visualisation and interaction
 process so the users of this package can more easily define how a tree or a dataflow should be
 viewed and interacted with.
-To acheive this, we make more heavy use of the observer/observed system from `openalea.core` and
+To achieve this, we make more heavy use of the observer/observed system from `openalea.core` and
 define contracts that need to be satisfied by both the observers and the observed so that they
 collaborate nearly out-of-the-box.
 We also create a mapping between graph types and viewing strategies. If the graph is a dataflow
@@ -41,7 +41,7 @@ The grapheditor package contains :
 
 ## Installation
 ```python
-conda create -n grapheditor python=3.9 openalea.grapheditor qtconsole networkx -c openalea3 -c conda-forge
+mamba create -n grapheditor python openalea.grapheditor qtconsole networkx -c openalea3 -c conda-forge
 ```
 The `networkx` is to get the example below working.
 
