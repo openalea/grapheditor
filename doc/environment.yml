@@ -4,8 +4,7 @@ channels:
   - openalea3
 dependencies:
   - python
-  - openalea.core
-  - qtpy
+  - networkx
   - pip
   - pip:
     - -e ..[doc]
