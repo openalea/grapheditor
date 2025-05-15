@@ -1,0 +1,10 @@
+name: grapheditor
+channels:
+  - conda-forge
+  - openalea3
+dependencies:
+  - python
+  - networkx
+  - pip
+  - pip:
+    - -e ..[doc]

@@ -1,13 +1,13 @@
 networkx GraphEditor strategy tutorial
 ######################################
 This tutorial describes how to implement a new GraphEditor strategy.
-GraphEditor is a system that implements low level mecanisms needed to
+GraphEditor is a system that implements low level mechanisms needed to
 do editing of graphs and uses so called "strategies" to describe
-specialised behaviours (drawing and editing) for a particuliar graph
+specialised behaviours (drawing and editing) for a particular graph
 implementation.
 
 This means that to implement a Qt view of a graph you just need to subclass
-two classes to implement how vertices and egdes behave in the Qt view + a
+two classes to implement how vertices and edges behave in the Qt view + a
 strategy class that maps a graph type with the vertex and edge class we just
 talked about.
 
