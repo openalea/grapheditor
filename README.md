@@ -1,6 +1,6 @@
 # GraphEditor 
 
-**Authors** : Daniel Barbeau
+**Authors** : Daniel Barbeau, Christophe Pradal
 
 **Institutes** : INRIA / CIRAD 
 
@@ -8,7 +8,7 @@
 
 **License** : Cecill-C
 
-**URL** : https://github.com/openalea/grapheditor
+**URL** : https://grapheditor.rtfd.io
 
 ## About 
 [![Docs](https://readthedocs.org/projects/grapheditor/badge/?version=latest)](https://grapheditor.readthedocs.io/)
@@ -250,3 +250,11 @@ To run the example just do:
 ```python
 python nx_app.py
 ```
+
+### Contributors
+
+### contributors
+
+<a href="https://github.com/openalea/grapheditor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=openalea/grapheditor" />
+</a>
