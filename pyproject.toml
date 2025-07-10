@@ -1,6 +1,13 @@
 [build-system]
-requires = ["setuptools"]
+requires = [
+  "setuptools",
+  "setuptools_scm",
+]
 build-backend = "setuptools.build_meta"
+
+# enable dynamic versioning based on git tags
+[tool.setuptools_scm]
+# can be empty if no extra settings are needed, presence enables setuptools-scm
 
 [project]
 name = "openalea.grapheditor"
@@ -9,7 +16,8 @@ authors = [
   { name = "Christophe Pradal"},
 ]
 description = "An generic GUI API for viewing and interacting with various sorts of graphs"
-license = {file = "LICENSE.txt"}
+license = "CECILL-C"
+license-files = ["LICEN[CS]E*"]
 keywords = ["openalea", "graph", "qt"]
 requires-python = ">=3.8"
 classifiers = [
@@ -19,12 +27,11 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering",
+  "Framework :: OpenAlea",
 ]
 dynamic = ["version", "readme"]
 dependencies = [
