@@ -23,5 +23,5 @@ __license__= "Cecill-C"
 __revision__=" $Id"
 
 
-
-import openalea.grapheditor
+def test_import():
+    from openalea.grapheditor import qt, qtutils, qtgraphview, all
