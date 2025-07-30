@@ -58,6 +58,13 @@ NetworkX doesn't provide any sort of callback system to allow us to insert *obse
 behaviours to the graph structure so we first need to wrap the graph
 structure in order to emit basic signals.
 
-As we will manipulate graphs, nodes and edges, we will create three
-wrappers for these:
-* A node will be seen as
+In order run to the example you need to install `networkx` in the conda environment:
+
+    mamba install -c conda-forge networkx
+
+Below an example of a graph with 100 nodes and 100 edges that can be deplaced. Just launch Ipython and run
+
+    >>> %gui qt
+    >>> %run nx_app.py
+
+.. literalinclude::  ../../examples/networkx/nx_app.py

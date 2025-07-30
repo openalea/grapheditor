@@ -1,10 +1,11 @@
-name: grapheditor
+name: grapheditor_dev
 channels:
   - conda-forge
   - openalea3
 dependencies:
   - python
-  - networkx
+  - qtpy
+  - pyqt
   - pip
   - pip:
     - -e ..[doc]

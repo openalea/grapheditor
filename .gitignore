@@ -68,4 +68,5 @@ nosetests.xml
 *._icon.png
 
 # Mac dirs
-.DS_Store
+.DS_Storedoc/_build
+doc/_build/*

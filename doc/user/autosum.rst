@@ -18,7 +18,7 @@ Class Inheritance diagram
 :mod:`openalea.grapheditor.base` module
 ================================================
 
-Download the source file :download:`../../src/grapheditor/base.py`.
+Download the source file :download:`../../src/openalea/grapheditor/base.py`.
 
 
 .. automodule:: openalea.grapheditor.base
@@ -33,7 +33,7 @@ Download the source file :download:`../../src/grapheditor/base.py`.
 :mod:`openalea.grapheditor.baselisteners` module
 ================================================
 
-Download the source file :download:`../../src/grapheditor/baselisteners.py`.
+Download the source file :download:`../../src/openalea/grapheditor/baselisteners.py`.
 
 
 .. automodule:: openalea.grapheditor.baselisteners
@@ -48,7 +48,7 @@ Download the source file :download:`../../src/grapheditor/baselisteners.py`.
 :mod:`openalea.grapheditor.qtgraphview` module
 ==============================================
 
-Download the source file :download:`../../src/grapheditor/qtgraphview.py`.
+Download the source file :download:`../../src/openalea/grapheditor/qtgraphview.py`.
 
 
 .. automodule:: openalea.grapheditor.qtgraphview
@@ -61,7 +61,7 @@ Download the source file :download:`../../src/grapheditor/qtgraphview.py`.
 :mod:`openalea.grapheditor.edgefactory` module
 ==============================================
 
-Download the source file :download:`../../src/grapheditor/edgefactory.py`.
+Download the source file :download:`../../src/openalea/grapheditor/edgefactory.py`.
 
 
 .. automodule:: openalea.grapheditor.edgefactory
@@ -74,7 +74,7 @@ Download the source file :download:`../../src/grapheditor/edgefactory.py`.
 :mod:`openalea.grapheditor.qtutils` module
 ==========================================
 
-Download the source file :download:`../../src/grapheditor/qtutils.py`.
+Download the source file :download:`../../src/openalea/grapheditor/qtutils.py`.
 
 
 .. automodule:: openalea.grapheditor.qtutils
@@ -88,7 +88,7 @@ Download the source file :download:`../../src/grapheditor/qtutils.py`.
 :mod:`openalea.grapheditor.interfaces` module
 =============================================
 
-Download the source file :download:`../../src/grapheditor/interfaces.py`.
+Download the source file :download:`../../src/openalea/grapheditor/interfaces.py`.
 
 
 .. automodule:: openalea.grapheditor.interfaces
