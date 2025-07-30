@@ -14,7 +14,7 @@ This manual details functions, modules, and objects included in
 OpenAlea.GraphEditor, describing what they are and what they do.
 
 .. image:: ge_overview.png
-    :scale: 75
+    :width: 75
 
 .. toctree::
     :maxdepth: 1
