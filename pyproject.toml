@@ -7,7 +7,10 @@ build-backend = "setuptools.build_meta"
 
 # enable dynamic versioning based on git tags
 [tool.setuptools_scm]
-# can be empty if no extra settings are needed, presence enables setuptools-scm
+# Format version to ease alignment with conda/meta.yaml tag-based versioning
+fallback_version = "2.4.0.dev0"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
 
 [project]
 name = "openalea.grapheditor"
@@ -19,7 +22,7 @@ description = "An generic GUI API for viewing and interacting with various sorts
 license = "CECILL-C"
 license-files = ["LICEN[CS]E*"]
 keywords = ["openalea", "graph", "qt"]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
   "Intended Audience :: Science/Research",
   "Intended Audience :: Developers",
@@ -30,6 +33,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering",
   "Framework :: OpenAlea",
 ]
