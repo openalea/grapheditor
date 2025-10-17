@@ -37,16 +37,9 @@ The grapheditor package contains :
   - a canvas for Qt
   - an implementation of a dataflow viewer.
 
-### Requirements 
-
-- OpenAlea.Core
-- Python >= 3.8
-- Qt >= 5.12
-- QtPy (PyQt >= 5.12)
-
 ## Installation
 ```bash
-mamba create -n grapheditor python openalea.grapheditor qtconsole networkx -c openalea3 -c conda-forge
+mamba create -n grapheditor -c openalea3 -c conda-forge openalea.grapheditor networkx 
 ```
 The `networkx` is to get the example below working.
 
