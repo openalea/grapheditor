@@ -244,8 +244,6 @@ To run the example just do:
 python nx_app.py
 ```
 
-### Contributors
-
 ### contributors
 
 <a href="https://github.com/openalea/grapheditor/graphs/contributors">
