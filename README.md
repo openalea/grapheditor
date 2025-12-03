@@ -244,7 +244,7 @@ To run the example just do:
 python nx_app.py
 ```
 
-### contributors
+### Contributors
 
 <a href="https://github.com/openalea/grapheditor/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=openalea/grapheditor" />
