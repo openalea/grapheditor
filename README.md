@@ -12,7 +12,7 @@
 
 ## About 
 [![Docs](https://readthedocs.org/projects/grapheditor/badge/?version=latest)](https://grapheditor.readthedocs.io/)
-[![Build Status](https://github.com/openalea/grapheditor/actions/workflows/conda-package-build.yml/badge.svg?branch=master)](https://github.com/openalea/grapheditor/actions/workflows/conda-package-build.yml?query=branch%3Amaster)
+[![Build Status](https://github.com/openalea/grapheditor/actions/workflows/openalea_ci.yml/badge.svg)](https://github.com/openalea/grapheditor/actions/workflows/openalea_ci.yml?query=branch%3Amaster)
 [![Python Version](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/downloads/)
 [![License](https://anaconda.org/openalea3/openalea.grapheditor/badges/license.svg)](https://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html)
 [![Anaconda-Server Badge](https://anaconda.org/openalea3/openalea.grapheditor/badges/version.svg)](https://anaconda.org/openalea.grapheditor)
@@ -37,16 +37,9 @@ The grapheditor package contains :
   - a canvas for Qt
   - an implementation of a dataflow viewer.
 
-### Requirements 
-
-- OpenAlea.Core
-- Python >= 3.8
-- Qt >= 5.12
-- QtPy (PyQt >= 5.12)
-
 ## Installation
 ```bash
-mamba create -n grapheditor python openalea.grapheditor qtconsole networkx -c openalea3 -c conda-forge
+mamba create -n grapheditor -c openalea3 -c conda-forge openalea.grapheditor networkx 
 ```
 The `networkx` is to get the example below working.
 
@@ -252,8 +245,6 @@ python nx_app.py
 ```
 
 ### Contributors
-
-### contributors
 
 <a href="https://github.com/openalea/grapheditor/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=openalea/grapheditor" />
